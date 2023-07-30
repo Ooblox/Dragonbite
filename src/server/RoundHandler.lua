@@ -4,11 +4,6 @@ local CreateClass = require(game.ReplicatedStorage.CreateClass)
 
 local DragonClass = CreateClass(require(script.Parent.Dragon))
 
-local SpawnDragon = require(script.DragonSpawn)
-local SpawnSurvivor = require(script.SurvivorSpawn)
-
-local ServerStatus = game.ReplicatedStorage.ServerStatus
-
 return (function(self)
 	self.MINIMUM_PLAYERS = 1
 	self.SURVIVOR_TEETH_AWARD = 2

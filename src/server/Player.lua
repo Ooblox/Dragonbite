@@ -9,7 +9,13 @@ return function(self)
     self.Instance = nil
     self.Character = nil
     self.Data = {
-
+		Team = "",
+		DragonChance = 0,
+		Currency = 0,
+		EquippedBoat = "Raft",
+		Ships = {
+			"Raft",
+		},
     }
 
     self.SaveData = function()
