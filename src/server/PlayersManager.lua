@@ -25,28 +25,40 @@ return function(self)
         end)
     end
     
+    self.GetPlayerObjFromInst = function(Inst)
+        for i, v in pairs(self.CurrentPlayerObjects) do
+            if v.Instance == Inst then
+                return v
+            end
+        end
+    end
+
     self.PlayerDataInterface = function(PlayerInst, Data, Type)
         game.ServerScriptService.Signals.PlayerDataInterface.OnInvoke = function(PlayerInst, Data, Type)
-            for i, v in pairs(self.CurrentPlayerObjects) do
-                if v.Instance == PlayerInst then
-                    if Data then
-                        if Type == "Replace" then
-                            for i, v in pairs(Data) do
-                                v.Data[i] = v
-                            end
-                        elseif Type == "Add" then
-                            for i, v in pairs(Data) do
-                                v.Data[i] += v
-                            end                      
-                        end
-
-                        game.ReplicatedStorage.LocalSignals.PlayerDataChange:Fire(self.Instance)
-                        game.ReplicatedStorage.RemoteSignals.PlayerDataChange:FireClient(self.Instance)
+            local PlayerObj = self.GetPlayerObjFromInst(PlayerInst)
+            if Data then
+                if Type == "Replace" then
+                    for i, v in pairs(Data) do
+                        PlayerObj.Data[i] = v
                     end
-                           
-                    return v.Data
+                elseif Type == "Add" then
+                    for i, v in pairs(Data) do
+                        PlayerObj.Data[i] += v
+                    end                      
                 end
+
+                game.ReplicatedStorage.LocalSignals.PlayerDataChange:Fire(self.Instance)
+                game.ReplicatedStorage.RemoteSignals.PlayerDataChange:FireClient(self.Instance)
             end
+                    
+            return PlayerObj.Data
+        end
+    end
+
+    self.PlayerSpawnHandler = function()
+        game.ServerScriptService.Signals.SpawnPlayer.OnInvoke = function(PlayerInst)
+            local PlayerObj = self.GetPlayerObjFromInst(PlayerInst)
+            PlayerObj.Spawn()
         end
     end
 

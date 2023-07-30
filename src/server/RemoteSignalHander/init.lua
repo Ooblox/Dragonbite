@@ -12,6 +12,10 @@ local RemoteSignalHandlerClass = CreateClass(function(self)
 			ActionHandler.Initiate(Player, Data)
 		end)
 	end
+
+    self.Initiate = function()
+        self.DetectSignals()
+    end
 end)
 
 local RemoteSignalHandler = RemoteSignalHandlerClass.new()

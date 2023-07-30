@@ -42,4 +42,27 @@ return function(self)
     self.OnLeave = function()
         self.SaveData()
     end
+
+    self.Spawn = function()
+        self.Instance.PlayerGui.MenuGui.Enabled = false	
+	
+        if game.ServerScriptService.Signals.PlayerInfoInterface:Invoke(self.Instance).OtherBoat == "" then
+            local Boat = game.ReplicatedStorage.Boats[game.ServerScriptService.Signals.PlayerInfoInterface:Invoke(self.Instance).EquippedBoat]:Clone()
+    
+            local RandomPos = game.ServerStorage.Spawns:GetChildren()[math.random(1, #game.ServerStorage.Spawns:GetChildren())]
+    
+            Boat:SetPrimaryPartCFrame(RandomPos.CFrame)
+            Boat.Drive.BodyPosition.Position = RandomPos.Position
+    
+            Boat.Parent = game.Workspace.Boats
+    
+            Boat.Drive:Sit(self.Instance.Character.Humanoid)
+    
+            Boat.Name = self.Instance.Name
+        else
+            local Boat = game.Workspace.Boats:WaitForChild(game.ReplicatedStorage.Signals.PlayerInfoInterface:Invoke(self.Instance).OtherBoat)
+            
+            self.Instance:MoveTo(Boat.PrimaryPart.Position)
+        end
+    end
 end

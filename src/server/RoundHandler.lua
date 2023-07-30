@@ -1,5 +1,9 @@
 local Ts = game:GetService("TweenService")
 
+local CreateClass = require(game.ReplicatedStorage.CreateClass)
+
+local DragonClass = CreateClass(require(script.Parent.Dragon))
+
 local SpawnDragon = require(script.DragonSpawn)
 local SpawnSurvivor = require(script.SurvivorSpawn)
 
@@ -134,7 +138,7 @@ return (function(self)
 		for i, v in pairs(game.Players:GetChildren()) do
 			if  game.ReplicatedStorage.Signals.PlayerInfoInterface:Invoke(v).Team ~= "Dragon" then
 				table.insert(self.Players.Survivors, v)
-				SpawnSurvivor(v)
+				game.ServerScriptService.Signals.SpawnPlayer:Invoke(v)
 				v:SetAttribute("Team", "Survivor")
 				
 				v.Character.Humanoid:GetPropertyChangedSignal("Health"):Connect(function(Amount)
@@ -179,8 +183,10 @@ return (function(self)
 			p.PlayerGui.GameGui.Enabled = true
 		end
 		
-		SpawnDragon(Dragon)
-		
+		local DragonObj = DragonClass.new()
+		DragonObj.Player = Dragon
+		DragonObj.Instance = game.ReplicatedStorage.Dragon
+
 		self.StartingSurvivors = #game.Players:GetChildren() - 1
 		
 		for i = 300, 1, -1 do
@@ -269,7 +275,7 @@ return (function(self)
 		end)
 	end
 	
-	self.Initiate = function()
+	self.ServerStarted = function()
 		self.WaitForPlayers()
 	end
 end)

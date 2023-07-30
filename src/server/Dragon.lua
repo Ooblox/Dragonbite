@@ -2,6 +2,7 @@
 
 return function(self)
 	self.Player = nil
+	self.Instance = nil
 
     self.Spawn = function()
         self.Player.PlayerGui.GameGui.Enabled = true
@@ -24,7 +25,7 @@ return function(self)
     end
 
 	self.DamageOnTouch = function()
-		for i, v in pairs(script.Parent:GetChildren()) do
+		for i, v in pairs(self.Instance:GetChildren()) do
 			if v:IsA("BasePart") then
 				v.Touched:Connect(function(Hit)
 					local Player = game.Players:GetPlayerFromCharacter(Hit.Parent)
@@ -57,6 +58,10 @@ return function(self)
 				end)
 			end
 		end
+	end
+
+	self.Initiate = function()
+		self.Spawn()
 	end
 end
 
